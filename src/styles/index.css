@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'DosVGA';
+    src: url('../assets/fonts/DosVGA.ttf');
+}
+@font-face {
+    font-family: 'BulkyPix';
+    src: url('../assets/fonts/BULKYPIX.TTF');
+}
+
+body {
+    font-family: 'DosVGA';
+    color: white;
+    background-color: black;
+    font-size: 1.2rem;
+}
+
+::-moz-selection {
+    /* Code for Firefox */
+    color: black;
+    background: white;
+}
+
+::selection {
+    color: black;
+    background: white;
+}
