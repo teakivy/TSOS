@@ -4,6 +4,8 @@ import { Executable } from '../ExecutableTypes';
 
 export const cd: Executable = {
   name: 'cd',
+  useage: 'cd <directory>',
+  description: 'Change the current directory',
   onExecute: (args: string[]) => {
     changeCurrentDirectory(args[0]);
     api.send('changeDir');

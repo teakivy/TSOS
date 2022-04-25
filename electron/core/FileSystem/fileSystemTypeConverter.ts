@@ -84,10 +84,15 @@ export const convertFileSystem = (
   };
 
   fileSystem.deleteDirectory = (name: string): void => {
-    let dir = fileSystem.getDirectory(name);
-    if ((dir as Directory).name) {
-      (dir as Directory).deleted = true;
+    const dirIndex = fileSystem.directories.findIndex(
+      (directory: BaseDirectory) => directory.name === name
+    );
+
+    if (dirIndex !== -1) {
+      fileSystem.directories[dirIndex].deleted = true;
     }
+
+    saveFileSystem(removeDeletedFiles(getFileSystem()));
   };
 
   fileSystem.hasFile = (name: string): boolean => {
@@ -230,18 +235,10 @@ export const convertFile = (baseFile: BaseFile): File => {
       }
       fs = convertFileSystem((directory as Directory).children);
     }
-
-    console.log('-----------------------');
-    console.log(fs);
-    console.log('Deleting file');
     fs.deleteFile(file.name);
-    console.log(fs);
-    console.log('Adding file');
     fs.addFile(file);
-    console.log(fs);
-    console.log('-----------------------');
 
-    saveFileSystem(totalFS);
+    saveFileSystem(removeDeletedFiles(fs));
   };
 
   return file;

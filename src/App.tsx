@@ -20,7 +20,11 @@ export class App extends Component<
     this.state = {
       text: [
         { text: 'Hello World ! ' },
-        { text: 'How are you?', italic: true, color: 'lightBlue' },
+        {
+          text: 'Type "help" for a list of all avaliable commands.',
+          italic: true,
+          color: 'lightblue',
+        },
       ],
       input: '',
       directory: '/',
@@ -43,15 +47,23 @@ export class App extends Component<
         text: [...this.state.text, m],
       });
     });
+
+    window.api.on('clearMessages', (m: BaseTextComponent) => {
+      this.setState({
+        text: [],
+      });
+    });
   }
 
   _handleKeyDown = (e: { key: string }) => {
     if (e.key === 'Enter') {
+      if (this.state.input.length === 0) return;
+
       let newText = this.state.text;
       newText.push({ text: '> ', newLine: true, color: 'gold' });
       newText.push({ text: this.state.input });
-      let cmdName = this.state.input.split(' ')[0];
-      let cmdArgs = this.state.input.split(' ').slice(1);
+      let cmdName = this.state.input.trim().split(' ')[0];
+      let cmdArgs = this.state.input.trim().split(' ').slice(1);
       window.api.exec.runCommand(cmdName, cmdArgs);
 
       this.setState({ text: newText, input: '' });

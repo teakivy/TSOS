@@ -42,6 +42,10 @@ export const api = {
     api.sendMessage({ text: error, newLine, color: 'red' });
   },
 
+  clearMessages: () => {
+    ipcRenderer.send('clearMessages');
+  },
+
   /**
    * Provide an easier way to listen to events
    */

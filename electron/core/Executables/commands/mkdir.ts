@@ -3,9 +3,12 @@ import {
   getCurrentDirAsFileSystem,
   getCurrentDirectory,
 } from '../../FileSystem/fileManager';
+import { Executable } from '../ExecutableTypes';
 
-export const mkdir = {
+export const mkdir: Executable = {
   name: 'mkdir',
+  useage: 'mkdir <directory>',
+  description: 'Create a directory',
   onExecute: (args: string[]) => {
     let currentDir = getCurrentDirAsFileSystem();
     currentDir.addDirectory({

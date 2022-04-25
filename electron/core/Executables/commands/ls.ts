@@ -1,8 +1,11 @@
 import { api } from '../../../bridge';
 import { getCurrentDirAsFileSystem } from '../../FileSystem/fileManager';
+import { Executable } from '../ExecutableTypes';
 
-export const ls = {
+export const ls: Executable = {
   name: 'ls',
+  useage: 'ls',
+  description: 'List the contents of the current directory',
   onExecute: (args: string[]) => {
     let dir = getCurrentDirAsFileSystem();
     let files = dir.getFiles();
