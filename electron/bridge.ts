@@ -12,6 +12,7 @@ import {
   File,
   FileSystemError,
 } from './core/FileSystem/fileSystemTypes';
+import { loadSave, saveAll } from './core/SaveSystem/SaveSystemManager';
 import { BaseTextComponent } from './core/TextComponent/TextComponentTypes';
 
 export const api = {
@@ -70,6 +71,14 @@ export const api = {
     runCommand: (command: string, args: string[]) => {
       execute(command, args);
     },
+  },
+
+  loadSave: () => {
+    loadSave();
+  },
+
+  saveAll: () => {
+    saveAll();
   },
 
   testFS: () => {

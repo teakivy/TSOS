@@ -92,14 +92,13 @@ export const pauseSong: Executable = {
   },
 };
 
-export const stopSong: Executable = {
-  name: 'stopsong',
-  useage: 'stopsong',
+export const stop: Executable = {
+  name: 'stop',
+  useage: 'stop',
   description: 'Stops the song',
   onExecute: () => {
     if (player) {
       player.pause();
-      player.currentTime = Infinity;
 
       player = undefined;
       api.sendMessage({

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import ScrollableFeed from 'react-scrollable-feed';
+import { saveAll } from '../electron/core/SaveSystem/SaveSystemManager';
 import { BaseTextComponent } from '../electron/core/TextComponent/TextComponentTypes';
 import TextComponent from './components/TextComponent';
 
@@ -32,6 +33,8 @@ export class App extends Component<
   }
 
   componentDidMount() {
+    window.api.loadSave();
+
     this.setState({
       directory: window.api.fs.getCurrentDirectory(),
     });
@@ -53,6 +56,10 @@ export class App extends Component<
         text: [],
       });
     });
+  }
+
+  componentDidUpdate() {
+    // window.api.loadSave();
   }
 
   _handleKeyDown = (e: { key: string }) => {

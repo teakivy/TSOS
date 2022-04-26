@@ -16,7 +16,16 @@ import { exit } from './commands/exit';
 import { date } from './commands/date';
 import { speak } from './commands/speak';
 import { say } from './commands/say';
-import { pauseSong, playSong, stopSong } from './commands/playSong';
+import { pauseSong, playSong, stop } from './commands/playSong';
+import { network } from './commands/network';
+import { heyrick } from './commands/heyrick';
+import { pepe } from './commands/pepe';
+import { owo } from './commands/owo';
+import { pwd } from './commands/pwd';
+import { touch } from './commands/touch';
+import { historyCommand } from './commands/history';
+import { save } from './commands/save';
+import { saveAll } from '../SaveSystem/SaveSystemManager';
 
 export let commands = [
   help,
@@ -37,14 +46,34 @@ export let commands = [
   say,
   playSong,
   pauseSong,
-  stopSong,
-];
+  stop,
+  network,
+  heyrick,
+  pepe,
+  owo,
+  pwd,
+  touch,
+  historyCommand,
+  save,
+].sort((a, b) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;
+});
+
+let history: { command: string; args: string[]; text: string }[] = [];
 
 export const execute = (command: string, args: string[]) => {
+  addToHistory(command, args);
   try {
     for (let i = 0; i < commands.length; i++) {
       if (commands[i].name === command) {
         commands[i].onExecute(args);
+        saveAll();
         return;
       }
     }
@@ -54,4 +83,18 @@ export const execute = (command: string, args: string[]) => {
     api.sendError('An error occurred while executing this command.');
     console.log(e);
   }
+};
+
+export const getHistory = () => {
+  return history;
+};
+
+export const addToHistory = (command: string, args: string[]) => {
+  history.push({ command, args, text: command + ' ' + args.join(' ') });
+};
+
+export const setHistory = (
+  newHistory: { command: string; args: string[]; text: string }[]
+) => {
+  history = newHistory;
 };
