@@ -1,3 +1,6 @@
+/**
+ * The executable base type
+ */
 export interface Executable {
   name: string;
   useage: string;

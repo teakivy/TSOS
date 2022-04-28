@@ -5,15 +5,15 @@ import { loadSave, saveAll } from './core/SaveSystem/SaveSystemManager';
 
 let mainWindow: BrowserWindow | null;
 
+// Declare webpack thingys
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-// const assetsPath =
-//   process.env.NODE_ENV === 'production'
-//     ? process.resourcesPath
-//     : app.getAppPath()
-
+/**
+ * This method will be called when Electron starts.
+ */
 function createWindow() {
+  // Create the browser window.
   mainWindow = new BrowserWindow({
     // icon: path.join(assetsPath, 'assets', 'icon.png'),
     width: 1100,
@@ -21,6 +21,7 @@ function createWindow() {
     backgroundColor: 'black',
     autoHideMenuBar: true,
     webPreferences: {
+      // disable web security, & enable isolation
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false,
@@ -28,12 +29,18 @@ function createWindow() {
     },
   });
 
+  // Load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
+  // on close, set mainWindow to null
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
+
+/**
+ * Register main listeners to send to the renderer process
+ */
 async function registerListeners() {
   /**
    * This comes from bridge integration, check bridge.ts
@@ -55,10 +62,12 @@ async function registerListeners() {
   });
 }
 
+// When the app is ready, create the window
 app
   .on('ready', createWindow)
   .whenReady()
   .then(() => {
+    // Register listeners
     registerListeners();
 
     // Register a protocol "atom:///" to allow for opening local files.
@@ -69,12 +78,14 @@ app
   })
   .catch(e => console.error(e));
 
+// When the app is closed, quit the app if the platform is not darwin
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
+// When activated, if no window is open, create one
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();

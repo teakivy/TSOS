@@ -3,12 +3,16 @@ import ntwk from 'network';
 import { api } from '../../../bridge';
 import { Executable } from '../ExecutableTypes';
 
+/**
+ * Print the network interfaces
+ */
 export const network: Executable = {
   name: 'network',
   useage: 'network',
   description: 'Get a list of network interfaces',
   onExecute: () => {
-    let interfaces = ntwk.get_interfaces_list(function (err: any, list: any) {
+    // Get the network interfaces from the network package
+    ntwk.get_interfaces_list(function (err: any, list: any) {
       if (err) {
         api.sendError(err.toString());
         return;
@@ -18,6 +22,8 @@ export const network: Executable = {
         text: '',
         newLine: true,
       });
+
+      // Print each interface
       list.forEach(function (item: any) {
         api.sendMessage([
           {

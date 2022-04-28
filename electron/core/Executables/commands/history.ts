@@ -2,11 +2,15 @@ import { api } from '../../../bridge';
 import { getHistory, setHistory } from '../executableManager';
 import { Executable } from '../ExecutableTypes';
 
+/**
+ * Get the command history
+ */
 export const historyCommand: Executable = {
   name: 'history',
   useage: 'history [clear]',
   description: 'Show the history of commands',
   onExecute: (args: string[]) => {
+    // If no arguments, show the history
     if (args.length === 0) {
       const history = getHistory();
       for (
@@ -17,6 +21,7 @@ export const historyCommand: Executable = {
         api.sendMessage({ text: history[i].text, newLine: true });
       }
     } else if (args[0] === 'clear') {
+      // If the first argument is clear, clear the history
       setHistory([]);
       api.sendMessage({
         text: 'Cleared history',
@@ -24,6 +29,7 @@ export const historyCommand: Executable = {
         color: 'green',
       });
     } else {
+      // Otherwise, show an error
       api.sendError('Invalid arguments.');
     }
   },

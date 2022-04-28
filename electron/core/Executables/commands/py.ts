@@ -2,11 +2,15 @@ import { PythonShell } from 'python-shell';
 import { api } from '../../../bridge';
 import { Executable } from '../ExecutableTypes';
 
+/**
+ * Execute python code
+ */
 export const py: Executable = {
   name: 'py',
   useage: 'py <code>',
   description: 'Run Python code',
   onExecute: (args: string[]) => {
+    // combine arguments into a single string
     let code = args.join(' ');
 
     api.sendMessage({
@@ -15,6 +19,7 @@ export const py: Executable = {
       color: 'green',
     });
 
+    // Run the code with PythonShell
     let pyShell = PythonShell.runString(
       code,
       undefined,
@@ -25,6 +30,7 @@ export const py: Executable = {
       }
     );
 
+    // When print() is called, send the text to the user
     pyShell.on('message', function (message: any) {
       // received a message sent from the Python script (a simple "print" statement)
       api.sendMessage({

@@ -1,5 +1,8 @@
 import { Executable } from '../ExecutableTypes';
 
+/**
+ * Blank executable for a comment
+ */
 export const comment: Executable = {
   name: '#',
   useage: '# <comment>',

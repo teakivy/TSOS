@@ -3,15 +3,8 @@ import { execute, getHistory } from './core/Executables/executableManager';
 import {
   getCurrentDirectory,
   getFileSystem,
-  saveFileSystem,
 } from './core/FileSystem/fileManager';
 import { convertFileSystem } from './core/FileSystem/fileSystemTypeConverter';
-import {
-  BaseFileSystem,
-  Directory,
-  File,
-  FileSystemError,
-} from './core/FileSystem/fileSystemTypes';
 import { loadSave, saveAll } from './core/SaveSystem/SaveSystemManager';
 import { BaseTextComponent } from './core/TextComponent/TextComponentTypes';
 
@@ -24,11 +17,21 @@ export const api = {
    * The function below can accessed using `window.Main.sendMessage`
    */
 
+  /**
+   * Send a message to the renderer process
+   * @param event Event name
+   * @param args Arguments
+   */
   send: (event: string, args?: any) => {
     ipcRenderer.send(event, args);
   },
 
+  /**
+   * Send a message to the screen
+   * @param message Components to send
+   */
   sendMessage: (message: BaseTextComponent | BaseTextComponent[]) => {
+    // Allow for 1 component, or multiple with one call
     if (!Array.isArray(message)) {
       message = [message];
     }
@@ -38,106 +41,92 @@ export const api = {
     });
   },
 
-  sendError: (error: string, newLine?: boolean) => {
-    if (newLine === undefined) newLine = true;
+  /**
+   * Send an error message to the user
+   * @param error Error to send
+   * @param newLine Whether to add a new line after the error (default: true)
+   */
+  sendError: (error: string, newLine: boolean = true) => {
     api.sendMessage({ text: error, newLine, color: 'red' });
   },
 
+  /**
+   * Clear the screen
+   */
   clearMessages: () => {
     ipcRenderer.send('clearMessages');
   },
 
   /**
-   * Provide an easier way to listen to events
+   * Subscribe to an event
+   * @param channel Channel to subscribe to
+   * @param callback Callback to call when the channel is called
    */
   on: (channel: string, callback: Function) => {
     ipcRenderer.on(channel, (_, data) => callback(data));
   },
 
-  getFile: (name: string) => {
-    // return getFile(name);
-  },
-
+  /**
+   * File system functions
+   */
   fs: {
+    /**
+     * Get the file system
+     * @returns The file system
+     */
     getFileSystem: () => {
       return convertFileSystem(getFileSystem());
     },
+    /**
+     * Get the current directory
+     * @returns The current directory
+     */
     getCurrentDirectory: () => {
       return getCurrentDirectory();
     },
   },
 
+  /**
+   * Command execution functions
+   */
   exec: {
+    /**
+     * Run a command
+     * @param command Command to execute
+     * @param args Arguments to pass to the command
+     */
     runCommand: (command: string, args: string[]) => {
       execute(command, args);
     },
   },
 
+  /**
+   * Command history functions
+   */
   commands: {
+    /**
+     * Get the command history
+     * @returns The command history
+     */
     getHistory: () => {
       return getHistory();
     },
   },
 
+  /**
+   * Load the save system
+   */
   loadSave: () => {
     loadSave();
   },
 
+  /**
+   * Save the save system
+   */
   saveAll: () => {
     saveAll();
   },
-
-  testFS: () => {
-    let fs = getFileSystem();
-
-    let testFile = fs.addFile({
-      name: 'test.txt',
-      content: 'test content',
-      path: '/test.txt',
-      created: new Date(),
-      lastModified: new Date(),
-      deleted: false,
-    });
-
-    testFile.setContent('HALLOOOOOO');
-
-    let testDir = fs.addDirectory({
-      name: 'testDir',
-      children: {
-        directories: [],
-        files: [],
-      },
-      path: '/testDir',
-      created: new Date(),
-      deleted: false,
-    });
-
-    let newDir = testDir.addSubDirectory({
-      name: 'newDir',
-      children: {
-        directories: [],
-        files: [],
-      },
-      path: '/testDir/newDir',
-      created: new Date(),
-      deleted: false,
-    });
-
-    let file = newDir.addFile({
-      name: 'test2.txt',
-      content: 'test content',
-      path: '/testDir/newDir/test2.txt',
-      created: new Date(),
-      lastModified: new Date(),
-      deleted: false,
-    });
-
-    file.setContent('Hello World!');
-
-    fs.deleteFile('test.txt');
-
-    console.log(getFileSystem());
-  },
 };
 
+// Register the 'api' object as a global variable (window.api)
 contextBridge.exposeInMainWorld('api', api);

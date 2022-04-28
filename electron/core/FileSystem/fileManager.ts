@@ -101,12 +101,15 @@ export const getCurrentDirAsFileSystem = (): FileSystem => {
  * @returns The new directory
  */
 export const changeCurrentDirectory = (newDirectory: string): void => {
+  // Split the dir path
   let dirList = newDirectory.split('/');
+  // If / is entered, set the current directory to root
   if (newDirectory === '/') {
     currentDirectory = formatDirPath(newDirectory);
     return;
   }
 
+  // If the first character is /, go to that directory from root
   if (newDirectory.startsWith('/')) {
     if (doesDirExist(newDirectory)) {
       currentDirectory = formatDirPath(newDirectory);
@@ -116,12 +119,15 @@ export const changeCurrentDirectory = (newDirectory: string): void => {
     return;
   }
 
+  // Otherwise, go to that directory from current directory
   let cDir = currentDirectory.split('/');
   if (cDir[0] == '') {
     cDir.shift();
   }
 
   let newDir;
+
+  // If the directory starts with .., go to the parent directory
   if (newDirectory.startsWith('..')) {
     cDir.pop();
     newDir = cDir.join('/');
@@ -134,6 +140,7 @@ export const changeCurrentDirectory = (newDirectory: string): void => {
     return;
   }
 
+  // If it starts with ., go from the current directory
   if (newDirectory.startsWith('.')) {
     cDir.push(dirList[1]);
     newDir = cDir.join('/');
@@ -149,6 +156,8 @@ export const changeCurrentDirectory = (newDirectory: string): void => {
   cDir.push(dirList[0]);
   newDir = cDir.join('/');
   newDir = formatDirPath(newDir);
+
+  // Check if the directory exists, if it does, set the current directory, if not, send an error
   if (doesDirExist(newDir)) {
     currentDirectory = newDir;
   } else {
@@ -156,7 +165,13 @@ export const changeCurrentDirectory = (newDirectory: string): void => {
   }
 };
 
+/**
+ * Check if a directory exists
+ * @param dirPath The directory path
+ * @returns true if the directory exists, false otherwise
+ */
 export const doesDirExist = (dirPath: string): boolean => {
+  // Loop through the directories until the directory is found
   let cut = dirPath.split('/');
   let currentDir = fileSystem;
   for (let i = 0; i < cut.length; i++) {
@@ -176,6 +191,11 @@ export const doesDirExist = (dirPath: string): boolean => {
   return true;
 };
 
+/**
+ * Format the directory path, starting with / and not ending with /
+ * @param dirPath The directory path to format
+ * @returns Formatted directory path
+ */
 export const formatDirPath = (dirPath: string): string => {
   if (!dirPath.startsWith('/')) {
     dirPath = '/' + dirPath;

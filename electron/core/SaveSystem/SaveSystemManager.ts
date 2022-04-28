@@ -8,15 +8,24 @@ import {
 import { getFileSystem, saveFileSystem } from '../FileSystem/fileManager';
 import { SaveSystem } from './SaveSystemTypes';
 
+// The appdata path based on OS
 let appData =
   process.env.APPDATA ||
   (process.platform == 'darwin'
     ? process.env.HOME + '/Library/Preferences'
     : process.env.HOME + '/.local/share');
 
+/**
+ * Get the save file path
+ * @returns The path to the save file
+ */
 export const getSavePath = (): string => {
   return `${appData}/TSOS/saves/main.tsos`;
 };
+
+/**
+ * Save the current system to a file
+ */
 export const saveAll = () => {
   let save: SaveSystem = {
     fileSystem: getFileSystem(),
@@ -31,6 +40,9 @@ export const saveAll = () => {
   });
 };
 
+/**
+ * Load the system from a file
+ */
 export const loadSave = () => {
   if (!fs.existsSync(getSavePath())) {
     return;

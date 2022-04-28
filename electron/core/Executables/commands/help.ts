@@ -2,6 +2,9 @@ import { api } from '../../../bridge';
 import { commands } from '../executableManager';
 import { Executable } from '../ExecutableTypes';
 
+/**
+ * Get help with commands
+ */
 export const help: Executable = {
   name: 'help',
   useage: 'help',
@@ -13,6 +16,8 @@ export const help: Executable = {
       color: 'gold',
     });
     api.sendMessage({ text: ' ', newLine: true });
+
+    // Send all commands with their useage, & description
     commands.forEach(command => {
       api.sendMessage([
         {

@@ -1,3 +1,6 @@
+/**
+ * Base text component structure
+ */
 export interface BaseTextComponent {
   text: string;
   color?: string;
