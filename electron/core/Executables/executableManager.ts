@@ -26,6 +26,9 @@ import { touch } from './commands/touch';
 import { historyCommand } from './commands/history';
 import { save } from './commands/save';
 import { saveAll } from '../SaveSystem/SaveSystemManager';
+import { alias } from './commands/alias';
+import { bangbang } from './commands/bangbang';
+import { comment } from './commands/comment';
 
 export let commands = [
   help,
@@ -55,6 +58,9 @@ export let commands = [
   touch,
   historyCommand,
   save,
+  alias,
+  bangbang,
+  comment,
 ].sort((a, b) => {
   if (a.name < b.name) {
     return -1;
@@ -65,11 +71,32 @@ export let commands = [
   return 0;
 });
 
+let aliases = [
+  {
+    name: 'list',
+    command: 'ls',
+  },
+];
+
 let history: { command: string; args: string[]; text: string }[] = [];
 
-export const execute = (command: string, args: string[]) => {
-  addToHistory(command, args);
+export const execute = (
+  command: string,
+  args: string[],
+  alias: boolean = false
+) => {
+  command = command.toLowerCase();
+
+  if (!alias) addToHistory(command, args);
   try {
+    for (let i = 0; i < aliases.length; i++) {
+      if (aliases[i].name === command) {
+        execute(aliases[i].command, args, true);
+        saveAll();
+        return;
+      }
+    }
+
     for (let i = 0; i < commands.length; i++) {
       if (commands[i].name === command) {
         commands[i].onExecute(args);
@@ -81,6 +108,8 @@ export const execute = (command: string, args: string[]) => {
     api.sendError(`${command} is not a valid command.`);
   } catch (e) {
     api.sendError('An error occurred while executing this command.');
+    addToHistory(command, args);
+
     console.log(e);
   }
 };
@@ -97,4 +126,20 @@ export const setHistory = (
   newHistory: { command: string; args: string[]; text: string }[]
 ) => {
   history = newHistory;
+};
+
+export const getAliases = () => {
+  return aliases;
+};
+
+export const setAliases = (newAliases: { name: string; command: string }[]) => {
+  aliases = newAliases;
+};
+
+export const removeAlias = (name: string) => {
+  aliases = aliases.filter(a => a.name !== name);
+};
+
+export const addAlias = (name: string, command: string) => {
+  aliases.push({ name, command });
 };

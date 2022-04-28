@@ -1,12 +1,20 @@
-import { getFileSystem, saveFileSystem } from './fileManager';
-import { BaseDirectory, BaseFile, BaseFileSystem } from './fileSystemTypes';
+import { saveFileSystem } from './fileManager';
+import { BaseFileSystem } from './fileSystemTypes';
 
+/**
+ * Removes deleted files and directories from the file system
+ * @param fileSystem File system to remove deleted files from
+ * @returns A new file system with deleted files removed
+ */
 export const removeDeletedFiles = (fileSystem: BaseFileSystem) => {
+  // Create a new blank file system
   let newFileSystem: BaseFileSystem = {
     directories: [],
     files: [],
   };
+  // Loop through each directory
   for (let i = 0; i < fileSystem.directories.length; i++) {
+    // Recursively remove deleted files and directories
     let dir = fileSystem.directories[i];
     if (dir.deleted) {
       continue;
@@ -20,6 +28,7 @@ export const removeDeletedFiles = (fileSystem: BaseFileSystem) => {
     });
   }
 
+  // Loop through each file, if it is marked as deleted, remove it
   for (let i = 0; i < fileSystem.files.length; i++) {
     let file = fileSystem.files[i];
     if (file.deleted) {
@@ -28,10 +37,15 @@ export const removeDeletedFiles = (fileSystem: BaseFileSystem) => {
     newFileSystem.files.push(file);
   }
 
+  // The new file system is the old file system with deleted files removed
   return newFileSystem;
 };
 
+/**
+ * Initializes a new file system
+ */
 export const initFileSystem = () => {
+  // Create a file system with a document directory containing help.txt.
   let fileSystem: BaseFileSystem = {
     directories: [
       {
@@ -57,5 +71,6 @@ export const initFileSystem = () => {
     files: [],
   };
 
+  // Save the file system
   saveFileSystem(fileSystem);
 };

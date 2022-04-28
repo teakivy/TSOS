@@ -1,15 +1,9 @@
-import fs from 'fs';
-import { findInList } from '../utils';
-import {
-  BaseDirectory,
-  BaseFileSystem,
-  Directory,
-  FileSystem,
-} from './fileSystemTypes';
+import { BaseDirectory, BaseFileSystem, FileSystem } from './fileSystemTypes';
 import { FileSystemError } from './fileSystemTypes';
-import { convertDirectory, convertFileSystem } from './fileSystemTypeConverter';
+import { convertFileSystem } from './fileSystemTypeConverter';
 import { api } from '../../bridge';
 
+// The temporary file system, until the file system has been loaded
 let fileSystem: BaseFileSystem = {
   directories: [
     {
@@ -46,26 +40,45 @@ let fileSystem: BaseFileSystem = {
   files: [],
 };
 
+// Set the current directory as root (/)
 let currentDirectory: string = '/';
 
+/**
+ * Return the current file system
+ * @returns The current file system
+ */
 export const getFileSystem = (): FileSystem => {
   return convertFileSystem(fileSystem);
 };
 
+/**
+ * Set the file system to a new file system
+ * @param newFileSystem The new file system to set
+ */
 export const saveFileSystem = (
   newFileSystem: BaseFileSystem | FileSystem
 ): void => {
   fileSystem = newFileSystem as BaseFileSystem;
 };
 
+/**
+ * Set the current directory
+ * @returns The current directory
+ */
 export const getCurrentDirectory = (): string => {
   return currentDirectory;
 };
 
+/**
+ * Return the current directory as FileSystem type
+ * @returns The current directory, as a FileSystem
+ */
 export const getCurrentDirAsFileSystem = (): FileSystem => {
+  // Split the dir path
   let dirPath = currentDirectory;
   let cut = dirPath.split('/');
   let currentDir = fileSystem;
+  // Convert the file system & sub directories
   for (let i = 0; i < cut.length; i++) {
     if (cut[i] === '') {
       continue;
@@ -77,9 +90,16 @@ export const getCurrentDirAsFileSystem = (): FileSystem => {
       currentDir = (tDir as BaseDirectory).children;
     }
   }
+
+  // Return converted file system
   return convertFileSystem(currentDir);
 };
 
+/**
+ * Change the current directory based on a locational path
+ * @param newDirectory The new directory to set (from current directory)
+ * @returns The new directory
+ */
 export const changeCurrentDirectory = (newDirectory: string): void => {
   let dirList = newDirectory.split('/');
   if (newDirectory === '/') {

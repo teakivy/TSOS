@@ -1,8 +1,14 @@
+/**
+ * Base file system structure, holds pure data with no logic
+ */
 export interface BaseFileSystem {
   directories: BaseDirectory[];
   files: BaseFile[];
 }
 
+/**
+ * Base file structure, holds pure data with no logic
+ */
 export interface BaseFile {
   name: string;
   content: string;
@@ -11,7 +17,9 @@ export interface BaseFile {
   lastModified: Date;
   deleted: boolean;
 }
-
+/**
+ * Base directory structure, holds pure data with no logic
+ */
 export interface BaseDirectory {
   name: string;
   children: BaseFileSystem;
@@ -20,6 +28,9 @@ export interface BaseDirectory {
   deleted: boolean;
 }
 
+/**
+ * File system structure, holds data with logic
+ */
 export interface FileSystem extends BaseFileSystem {
   getFiles(): File[];
   getDirectories(): Directory[];
@@ -33,6 +44,9 @@ export interface FileSystem extends BaseFileSystem {
   getDirectory(name: string): Directory | FileSystemError;
 }
 
+/**
+ * File structure, holds data with logic
+ */
 export interface File extends BaseFile {
   exists: () => boolean;
   getExtension: () => string;
@@ -44,6 +58,9 @@ export interface File extends BaseFile {
   save: () => void;
 }
 
+/**
+ * Directory structure, holds data with logic
+ */
 export interface Directory extends BaseDirectory {
   exists: () => boolean;
   getName: () => string;
@@ -63,11 +80,17 @@ export interface Directory extends BaseDirectory {
   delete: () => void;
 }
 
+/**
+ * File system errors
+ */
 export interface FileSystemError {
   type: FileSystemErrorType;
   message: string;
 }
 
+/**
+ * File system error types
+ */
 export enum FileSystemErrorType {
   FILE_NOT_FOUND,
   FILE_ALREADY_EXISTS,

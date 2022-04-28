@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-typescript",
-  "author": "Diego Fernandes <diego.schell.f@gmail.com>",
+  "name": "tsos",
+  "author": "Collin Jones",
   "version": "2.0.0",
   "description": "An Electron boilerplate including TypeScript, React, Jest and ESLint.",
   "main": "./.webpack/main/index.js",
@@ -15,9 +15,11 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
+    "@types/brotli": "^1.3.1",
     "@types/usetube": "^2.1.0",
     "@types/yosay": "^2.0.1",
     "ascii-pepe": "^1.0.0",
+    "brotli": "^1.3.2",
     "client-side-python-runner": "^1.6.6",
     "css-loader": "^6.7.1",
     "fs": "^0.0.1-security",
@@ -82,8 +84,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "name": "Electron starter",
-        "executableName": "electron-starter",
+        "name": "tsos",
+        "executableName": "TSOS",
         "icon": "assets/icon",
         "extraResource": [
           "assets"
@@ -114,7 +116,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "Electron Starter"
+            "name": "tsos"
           }
         },
         {

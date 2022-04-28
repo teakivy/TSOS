@@ -1,5 +1,10 @@
 import * as fs from 'fs';
-import { getHistory, setHistory } from '../Executables/executableManager';
+import {
+  getAliases,
+  getHistory,
+  setAliases,
+  setHistory,
+} from '../Executables/executableManager';
 import { getFileSystem, saveFileSystem } from '../FileSystem/fileManager';
 import { SaveSystem } from './SaveSystemTypes';
 
@@ -16,9 +21,10 @@ export const saveAll = () => {
   let save: SaveSystem = {
     fileSystem: getFileSystem(),
     commandHistory: getHistory(),
+    aliases: getAliases(),
   };
 
-  fs.writeFile(getSavePath(), JSON.stringify(save, null, '\t'), (err: any) => {
+  fs.writeFile(getSavePath(), JSON.stringify(save), (err: any) => {
     if (err) {
       console.log(err);
     }
@@ -39,6 +45,9 @@ export const loadSave = () => {
       }
       if (save.commandHistory) {
         setHistory(save.commandHistory);
+      }
+      if (save.aliases) {
+        setAliases(save.aliases);
       }
     }
   });

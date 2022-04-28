@@ -19,6 +19,7 @@ function createWindow() {
     width: 1100,
     height: 700,
     backgroundColor: 'black',
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

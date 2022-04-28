@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { execute } from './core/Executables/executableManager';
+import { execute, getHistory } from './core/Executables/executableManager';
 import {
   getCurrentDirectory,
   getFileSystem,
@@ -70,6 +70,12 @@ export const api = {
   exec: {
     runCommand: (command: string, args: string[]) => {
       execute(command, args);
+    },
+  },
+
+  commands: {
+    getHistory: () => {
+      return getHistory();
     },
   },
 
